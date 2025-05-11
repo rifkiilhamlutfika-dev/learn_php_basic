@@ -2,6 +2,13 @@
 
 $todos = [];
 
+function saveData($todos)
+{
+    $dataTodos = serialize($todos);
+    file_put_contents("data_todos.txt", $dataTodos);
+    header("http://localhost/Codepolitan/PHP%20Basic/todo.php");
+}
+
 if (file_exists("data_todos.txt")) {
     $dataFile = file_get_contents("data_todos.txt");
     $todos = $dataFile == ""  ? [] : unserialize($dataFile);
@@ -9,22 +16,17 @@ if (file_exists("data_todos.txt")) {
 
 if (isset($_GET["status"]) && isset($_GET["key"])) {
     $todos[$_GET["key"]]["status"] = $_GET["status"];
-    $dataTodos = serialize($todos);
-    file_put_contents("data_todos.txt", $dataTodos);
-    header("http://localhost/Codepolitan/PHP%20Basic/todo.php");
+    saveData($todos);
 }
 
 if (isset($_GET["delete"]) && isset($_GET["key"])) {
     unset($todos[$_GET["key"]]);
-    $dataTodos = serialize($todos);
-    file_put_contents("data_todos.txt", $dataTodos);
-    header("http://localhost/Codepolitan/PHP%20Basic/todo.php");
+    saveData($todos);
 }
 
 if (isset($_POST["todo"])) {
     $todos[] = ["name" => $_POST["todo"], "status" => 0];
-    $dataTodos = serialize($todos);
-    file_put_contents("data_todos.txt", $dataTodos);
+    saveData($todos);
 }
 ?>
 
